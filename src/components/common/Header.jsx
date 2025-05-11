@@ -11,7 +11,9 @@ const Profile = () => {
 
 function Header({ className }) {
   return (
-    <header className={`w-full p-2 relative ${className}`}>
+    <header
+      className={`w-full p-2 relative border-b border-[#cecece] ${className}`}
+    >
       <img src={logo} alt="logo" className="h-[3rem]" />
       <Profile className="bg-[#446133]" />
     </header>
