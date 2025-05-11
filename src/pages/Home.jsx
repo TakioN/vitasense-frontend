@@ -2,6 +2,7 @@ import { useRef } from "react";
 import Header from "../components/common/header";
 
 import pdfImg from "@/assets/images/pdf.svg";
+import Button from "../components/common/Button";
 
 function Home() {
   const fileInputRef = useRef();
@@ -11,7 +12,7 @@ function Home() {
   };
 
   return (
-    <div>
+    <>
       <Header />
       <main className="px-3">
         <p className="text-start font-bold text-xl py-10">
@@ -29,11 +30,9 @@ function Home() {
             </button>
           </div>
         </div>
-        <button className="w-4/5 rounded-md h-15 text-2xl font-bold text-white bg-[#275D7A] mb-10">
-          마이페이지
-        </button>
+        <Button>마이페이지</Button>
       </main>
-    </div>
+    </>
   );
 }
 

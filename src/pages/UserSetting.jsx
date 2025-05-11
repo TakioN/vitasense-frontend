@@ -1,3 +1,4 @@
+import Button from "../components/common/Button";
 import Header from "../components/common/header";
 
 const DISEASES = ["당뇨병", "수술 예정", "신경질환", "임산부", "간질 환자"];
@@ -28,7 +29,7 @@ function UserSetting() {
     ));
 
   return (
-    <div>
+    <>
       <Header />
       <main className="px-3 pt-20 mb-30">
         <div className="border border-[#EB757B] grid grid-cols-2 rounded-md mb-10">
@@ -39,10 +40,8 @@ function UserSetting() {
         </div>
       </main>
       {/* <button className="bg-[yellow]">업데이트</button> */}
-      <button className="w-4/5 rounded-md h-15 text-2xl font-bold text-white bg-[#275D7A] mb-10">
-        마이페이지
-      </button>
-    </div>
+      <Button>마이페이지</Button>
+    </>
   );
 }
 
