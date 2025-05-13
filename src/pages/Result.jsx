@@ -1,6 +1,10 @@
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 import Header from "../components/common/header";
 import Divider from "../components/common/Divider";
 import Button from "../components/common/Button";
+import recommendStore from "../store/RecommendStore";
 
 const DISEASES = [
   {
@@ -26,15 +30,35 @@ const DISEASES = [
 ];
 
 function Result() {
+  const navigate = useNavigate();
+
+  const { setData } = recommendStore();
+
   const renderPdfResult = () =>
     DISEASES.map((disease, idx) => (
-      <div className={`${idx % 2 == 0 ? "bg-[#a52a2a8c]" : "bg-[orange]"}`}>
+      <div
+        key={idx}
+        className={`${idx % 2 == 0 ? "bg-[#a52a2a8c]" : "bg-[orange]"}`}
+      >
         <p key={idx} className="flex justify-between py-1 mb-1 w-3/5 mx-auto">
           <span className="text-xl">{disease.name}</span>
           <span className="text-xl">{disease.value}</span>
         </p>
       </div>
     ));
+
+  const sendData = () => {
+    axios
+      .post("http://localhost:4000/result", {})
+      .then((res) => {
+        console.log(res);
+        setData(res.data.data);
+        navigate("/recommend");
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
 
   return (
     <>
@@ -60,7 +84,7 @@ function Result() {
           <div className="max-w-3xl mx-auto mb-20">{renderPdfResult()}</div>
           <Button>수정하기</Button>
         </div>
-        <Button>영양제 추천</Button>
+        <Button onClick={sendData}>영양제 추천</Button>
       </main>
     </>
   );

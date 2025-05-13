@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import Button from "../components/common/Button";
 import Header from "../components/common/header";
 
@@ -12,17 +14,19 @@ const TAKENDRUG = [
 ];
 
 function UserSetting() {
+  const navigate = useNavigate();
+
   const renderDiseases = () =>
-    DISEASES.map((disease) => (
-      <label className="flex items-center ml-5 h-18">
+    DISEASES.map((disease, idx) => (
+      <label key={idx} className="flex items-center ml-5 h-18">
         <input type="checkbox" className="size-5" />
         <span className="ml-2 text-2xl">{disease}</span>
       </label>
     ));
 
   const renderTakenDrugs = () =>
-    TAKENDRUG.map((drug) => (
-      <label className="flex items-center ml-5 h-18">
+    TAKENDRUG.map((drug, idx) => (
+      <label key={idx} className="flex items-center ml-5 h-18">
         <input type="checkbox" className="size-5" />
         <span className="ml-2 text-2xl">{drug}</span>
       </label>
@@ -40,7 +44,13 @@ function UserSetting() {
         </div>
       </main>
       {/* <button className="bg-[yellow]">업데이트</button> */}
-      <Button>마이페이지</Button>
+      <Button
+        onClick={() => {
+          navigate("/result");
+        }}
+      >
+        결과 보기
+      </Button>
     </>
   );
 }

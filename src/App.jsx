@@ -10,7 +10,10 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Recommend />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/user-setting" element={<UserSetting />} />
+        <Route path="/result" element={<Result />} />
+        <Route path="/recommend" element={<Recommend />} />
       </Routes>
     </Router>
   );
