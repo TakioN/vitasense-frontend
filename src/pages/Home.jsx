@@ -1,15 +1,18 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import Header from "../components/common/header";
 import pdfImg from "@/assets/images/pdf.svg";
 import Button from "../components/common/Button";
+import pdfResultStore from "../store/pdfResultStore";
 
 function Home() {
   const fileInputRef = useRef();
   const navigate = useNavigate();
+  const { setData } = pdfResultStore();
 
-  const [pdfFile, setPdfFile] = useState();
+  const [pdfFile, setPdfFile] = useState(null);
 
   const openFileSelector = () => {
     fileInputRef.current?.click();
@@ -18,6 +21,24 @@ function Home() {
   const handleFileSelector = (e) => {
     console.log(e.target.files[0]);
     setPdfFile(e.target.files[0]);
+  };
+
+  const sendPdfFile = async () => {
+    const formData = new FormData();
+    formData.append("pdfFile", pdfFile);
+
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/user/result`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      console.log(res.data);
+      setData(res.data);
+      navigate("/user-setting");
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -32,6 +53,7 @@ function Home() {
           <div>
             <input
               type="file"
+              name="pdfFile"
               ref={fileInputRef}
               className="hidden"
               onChange={handleFileSelector}
@@ -48,9 +70,7 @@ function Home() {
                   </button>
                   <button
                     className="text-2xl border border-black p-2 rounded-md"
-                    onClick={() => {
-                      navigate("/user-setting");
-                    }}
+                    onClick={sendPdfFile}
                   >
                     파일 업로드
                   </button>
