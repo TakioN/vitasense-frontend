@@ -5,15 +5,19 @@ import UserSetting from "./pages/UserSetting";
 import Result from "./pages/Result";
 import Recommend from "./pages/Recommend";
 import SignIn from "./pages/Signin";
-import "./App.css";
+import SignUp from "./pages/SignUp";
 import HistoryPage from "./pages/HostoryPage";
+
+import "./App.css";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/signIn" element={<SignIn />} />
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/sign-up" element={<SignUp />} />
+
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/user-setting" element={<UserSetting />} />
         <Route path="/result" element={<Result />} />
