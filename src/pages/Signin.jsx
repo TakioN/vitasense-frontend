@@ -1,10 +1,42 @@
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
-function SignIn() {
+function SignIn({ setIsLoggedIn }) {
   const navigate = useNavigate();
+
+  const [userId, setUserId] = useState("");
+  const [pwd, setPwd] = useState("");
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/main`, {
+        withCredentials: true,
+      })
+      .then(() => {
+        navigate("/");
+      });
+  }, []);
 
   const goToSignUp = () => {
     navigate("/sign-up");
+  };
+
+  const signInHandler = async () => {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/func/login_process`,
+        { username: userId, pwd },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(res);
+      setIsLoggedIn(true);
+      navigate("/");
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -18,6 +50,10 @@ function SignIn() {
               type="text"
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="아이디를 입력하세요"
+              value={userId}
+              onChange={(e) => {
+                setUserId(e.target.value);
+              }}
             />
           </div>
           <div className="mb-6">
@@ -26,12 +62,17 @@ function SignIn() {
               type="password"
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="비밀번호를 입력하세요"
+              value={pwd}
+              onChange={(e) => {
+                setPwd(e.target.value);
+              }}
             />
           </div>
           <div className="flex flex-col gap-2">
             <button
               type="button"
               className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors cursor-pointer"
+              onClick={signInHandler}
             >
               로그인
             </button>

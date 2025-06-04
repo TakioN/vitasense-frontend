@@ -1,17 +1,49 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import Header from "../components/common/header";
+import pdfResultStore from "../store/pdfResultStore";
+import { useNavigate } from "react-router-dom";
 
 function HistoryPage() {
+  const navigate = useNavigate();
+  const [histories, setHistories] = useState([]);
+  const { setpdfData, setJudgeResult } = pdfResultStore();
+  useEffect(() => {
+    const getHistory = async () => {
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/user/history`,
+          {
+            withCredentials: true,
+          }
+        );
+        console.log(res.data.history);
+        setHistories(res.data.history);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    getHistory();
+  }, []);
   const renderHistory = () =>
-    [1, 2, 3, 4].map(() => (
+    histories.map((his, idx) => (
       <div
         className="border border-[#EB757B] rounded-3xl py-3"
-        onClick={handleHistory}
+        onClick={() => {
+          handleHistory(his);
+        }}
+        key={idx}
       >
-        2021.12.21
+        {his.created_at.split("T")[0]}
       </div>
     ));
 
-  const handleHistory = () => {};
+  const handleHistory = (history) => {
+    // console.log(history);
+    setpdfData(history.result_json);
+    navigate("/result", { state: { submit: false } });
+  };
   return (
     <>
       <Header />
