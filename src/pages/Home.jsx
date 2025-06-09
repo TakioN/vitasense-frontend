@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import Header from "../components/common/header";
+import Header from "../components/common/Header";
 import pdfImg from "@/assets/images/pdf.svg";
 import Button from "../components/common/Button";
 import pdfResultStore from "../store/pdfResultStore";
@@ -10,7 +10,7 @@ import pdfResultStore from "../store/pdfResultStore";
 function Home() {
   const fileInputRef = useRef();
   const navigate = useNavigate();
-  const { setData } = pdfResultStore();
+  const { setpdfData } = pdfResultStore();
 
   const [pdfFile, setPdfFile] = useState(null);
 
@@ -34,7 +34,8 @@ function Home() {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
       console.log(res.data);
-      setData(res.data);
+      setpdfData(res.data);
+
       navigate("/user-setting");
     } catch (e) {
       console.log(e);

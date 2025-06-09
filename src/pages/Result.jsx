@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import Header from "../components/common/header";
@@ -8,77 +8,49 @@ import Button from "../components/common/Button";
 import recommendStore from "../store/RecommendStore";
 import pdfResultStore from "../store/pdfResultStore";
 
-const DISEASES = [
-  {
-    name: "체질량 지수",
-    value: 90,
-  },
-  {
-    name: "혈압",
-    value: 117,
-  },
-  {
-    name: "혈압",
-    value: 117,
-  },
-  {
-    name: "혈압",
-    value: 117,
-  },
-  {
-    name: "혈압",
-    value: 117,
-  },
-  {
-    name: "공복 혈당",
-    value: 89,
-  },
-  {
-    name: "혈압",
-    value: 117,
-  },
-  {
-    name: "혈압",
-    value: 117,
-  },
-  {
-    name: "혈압",
-    value: 117,
-  },
-  {
-    name: "혈압",
-    value: 117,
-  },
-];
-
 function Result() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { submit } = location.state || {};
   const [judges, setJudges] = useState({});
 
-  const { setData } = recommendStore();
+  const { setRecData } = recommendStore();
   const { pdfData } = pdfResultStore();
-  const TEMPPDF = {
-    체질량지수: "90",
-    고혈압_수축기: "200",
-    고혈압_이완기: "120",
-    혈색소: "13",
-    공복혈당: "100",
-    "혈청 크레아티닌": "1.5",
-    신사구체여과율: "60",
-    "에이에스티(AST)": "40",
-    "에이엘티(ALT)": "35",
-    "감마지티피(γ-GTP)": "63",
-  };
+  // const TEMPPDF = {
+  //   체질량지수: "90",
+  //   고혈압_수축기: "200",
+  //   고혈압_이완기: "120",
+  //   혈색소: "13",
+  //   공복혈당: "100",
+  //   "혈청 크레아티닌": "1.5",
+  //   신사구체여과율: "60",
+  //   "에이에스티(AST)": "40",
+  //   "에이엘티(ALT)": "35",
+  //   "감마지티피(γ-GTP)": "63",
+  // };
 
   useEffect(() => {
     const getJudges = async () => {
       try {
         const res = await axios.post(
           `${import.meta.env.VITE_API_URL}/user/judge`,
-          TEMPPDF
+          pdfData
         );
         console.log(res);
         setJudges(res.data);
+        if (!submit) {
+          const db_res = await axios.post(
+            `${import.meta.env.VITE_API_URL}/user/submitAll`,
+            {
+              result: pdfData,
+              judge: res.data,
+            },
+            {
+              withCredentials: true,
+            }
+          );
+          console.log(db_res);
+        }
       } catch (e) {
         console.error(e);
       }
@@ -101,16 +73,17 @@ function Result() {
     ));
 
   const sendData = () => {
-    axios
-      .post("http://localhost:4000/result", {})
-      .then((res) => {
-        console.log(res);
-        setData(res.data.data);
-        navigate("/recommend");
-      })
-      .catch((e) => {
-        console.error(e);
-      });
+    // axios
+    //   .post(`${import.meta.env.VITE_API_URL}/user/recommend`, {})
+    //   .then((res) => {
+    //     console.log(res);
+    //     setRecData(res.data.data);
+    //     navigate("/recommend");
+    //   })
+    //   .catch((e) => {
+    //     console.error(e);
+    //   });
+    navigate("/recommend");
   };
 
   const renderJudge = () =>
