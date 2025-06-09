@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import Header from "../components/common/header";
+import Header from "../components/common/Header";
 import pdfImg from "@/assets/images/pdf.svg";
 import Button from "../components/common/Button";
 import pdfResultStore from "../store/pdfResultStore";

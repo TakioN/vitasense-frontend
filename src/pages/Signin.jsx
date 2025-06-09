@@ -1,22 +1,16 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import useAuthStore from "../store/authStore";
 
-function SignIn({ setIsLoggedIn }) {
+function SignIn() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const { login } = useAuthStore();
 
   const [userId, setUserId] = useState("");
   const [pwd, setPwd] = useState("");
-
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/main`, {
-        withCredentials: true,
-      })
-      .then(() => {
-        navigate("/");
-      });
-  }, []);
 
   const goToSignUp = () => {
     navigate("/sign-up");
@@ -32,8 +26,12 @@ function SignIn({ setIsLoggedIn }) {
         }
       );
       console.log(res);
-      setIsLoggedIn(true);
-      navigate("/");
+      // setIsLoggedIn(true);
+      // navigate("/");
+      login();
+      const from = location.state?.from?.pathname || "/";
+      console.log(from);
+      navigate(from, { replace: true });
     } catch (e) {
       console.error(e);
     }

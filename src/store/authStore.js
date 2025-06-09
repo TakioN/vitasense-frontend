@@ -6,6 +6,7 @@ const useAuthStore = create((set) => ({
   isLoading: true,
 
   init: async () => {
+    console.log("initializing");
     try {
       await axios.get(`${import.meta.env.VITE_API_URL}/main`, {
         withCredentials: true,
@@ -19,6 +20,9 @@ const useAuthStore = create((set) => ({
       console.error(err);
       set({ isLoggedIn: false, isLoading: false });
     }
+  },
+  login: () => {
+    set({ isLoggedIn: true });
   },
 
   logout: () => {
