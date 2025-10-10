@@ -6,11 +6,13 @@ import Header from "../components/common/Header";
 import pdfImg from "@/assets/images/pdf.svg";
 import Button from "../components/common/Button";
 import pdfResultStore from "../store/pdfResultStore";
+import useAuthStore from "../store/authStore";
 
 function Home() {
   const fileInputRef = useRef();
   const navigate = useNavigate();
-  const { setpdfData } = pdfResultStore();
+  const { setPdfData } = pdfResultStore();
+  const { userName } = useAuthStore();
 
   const [pdfFile, setPdfFile] = useState(null);
 
@@ -34,7 +36,7 @@ function Home() {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
       console.log(res.data);
-      setpdfData(res.data);
+      setPdfData(res.data);
 
       navigate("/user-setting");
     } catch (e) {
@@ -42,12 +44,16 @@ function Home() {
     }
   };
 
+  const goToHistory = () => {
+    navigate("/history");
+  };
+
   return (
     <>
       <Header />
       <main className="px-3">
         <p className="text-start font-bold text-xl py-10">
-          이정빈님 안녕하세요
+          {userName}님 안녕하세요
         </p>
         <div className="flex flex-col justify-center items-center border border-[#EB757B] bg-[#eeeeee] aspect-square rounded-md mb-20">
           <img src={pdfImg} alt="pdf" className="size-25 mb-10" />
@@ -88,6 +94,7 @@ function Home() {
           </div>
         </div>
         <Button>마이페이지</Button>
+        <Button onClick={goToHistory}>이전 기록 조회</Button>
       </main>
     </>
   );

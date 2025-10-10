@@ -12,7 +12,7 @@ import Result from "./pages/Result";
 import Recommend from "./pages/Recommend";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import HistoryPage from "./pages/HostoryPage";
+import HistoryPage from "./pages/HistoryPage";
 import ProtectedRoute from "./components/Protected/ProtectedRoute";
 import useAuthStore from "./store/authStore";
 

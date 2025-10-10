@@ -26,9 +26,7 @@ function SignIn() {
         }
       );
       console.log(res);
-      // setIsLoggedIn(true);
-      // navigate("/");
-      login();
+      login(res.data.userName);
       const from = location.state?.from?.pathname || "/";
       console.log(from);
       navigate(from, { replace: true });

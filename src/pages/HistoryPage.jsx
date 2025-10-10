@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Header from "../components/common/header";
+import Header from "../components/common/Header";
 import pdfResultStore from "../store/pdfResultStore";
 import { useNavigate } from "react-router-dom";
 
 function HistoryPage() {
   const navigate = useNavigate();
   const [histories, setHistories] = useState([]);
-  const { setpdfData, setJudgeResult } = pdfResultStore();
+  const { setPdfData } = pdfResultStore();
   useEffect(() => {
     const getHistory = async () => {
       try {
@@ -35,14 +35,24 @@ function HistoryPage() {
         }}
         key={idx}
       >
-        {his.created_at.split("T")[0]}
+        {localizedDate(his.created_at)}
       </div>
     ));
 
   const handleHistory = (history) => {
-    // console.log(history);
-    setpdfData(history.result_json);
-    navigate("/result", { state: { submit: false } });
+    setPdfData(history.result_json);
+    navigate("/result", { state: { fromHistory: true } });
+  };
+
+  const localizedDate = (date) => {
+    const zdate = new Date(date);
+    const kstDate = new Date(zdate.getTime() + 9 * 60 * 60 * 1000);
+
+    const y = kstDate.getFullYear();
+    const m = String(kstDate.getMonth() + 1).padStart(2, "0");
+    const d = String(kstDate.getDate()).padStart(2, "0");
+
+    return `${y}-${m}-${d}`;
   };
   return (
     <>

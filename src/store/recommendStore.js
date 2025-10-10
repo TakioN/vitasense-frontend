@@ -1,8 +1,11 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-const recommendStore = create((set) => ({
-  recData: [],
-  setRecData: (newData) => set(() => ({ recData: newData })),
-}));
+const recommendStore = create(
+  persist((set) => ({
+    recData: [],
+    setRecData: (newData) => set(() => ({ recData: newData })),
+  }))
+);
 
 export default recommendStore;

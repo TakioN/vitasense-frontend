@@ -21,7 +21,7 @@ const pdfResultStore = create((set) => ({
     신장질환: "정상",
     간장질환: "정상",
   },
-  setpdfData: (newData) =>
+  setPdfData: (newData) =>
     set((state) => ({ pdfData: { ...state.pdfData, ...newData } })),
   setJudgeResult: (newData) =>
     set((state) => ({ judgeResult: { ...state.judgeResult, ...newData } })),
