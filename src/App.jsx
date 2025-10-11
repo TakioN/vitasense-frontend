@@ -17,6 +17,7 @@ import ProtectedRoute from "./components/Protected/ProtectedRoute";
 import useAuthStore from "./store/authStore";
 
 import "./App.css";
+import OnBoarding from "./pages/OnBoarding";
 
 function App() {
   const { init } = useAuthStore();
@@ -36,11 +37,11 @@ function App() {
         <Route path="/user-setting" element={<UserSetting />} />
         <Route path="/result" element={<Result />} />
         <Route path="/recommend" element={<Recommend />} /> */}
+        <Route path="/" element={<OnBoarding />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Home />} />
           <Route path="/history" element={<HistoryPage />} />
           <Route path="/user-setting" element={<UserSetting />} />
           <Route path="/result" element={<Result />} />

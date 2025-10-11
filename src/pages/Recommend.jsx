@@ -1,8 +1,6 @@
 import recommendStore from "../store/RecommendStore";
 import Header from "../components/common/Header";
 
-import omega3 from "@/assets/images/omega3.png";
-
 const RECOMMEND = [
   {
     itemName: "오메가-3",
