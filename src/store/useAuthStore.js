@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import axios from "axios";
+import request from "../apis/api";
 
 const useAuthStore = create(
   persist((set) => ({
@@ -11,7 +11,7 @@ const useAuthStore = create(
     init: async () => {
       console.log("initializing");
       try {
-        await axios.get(`${import.meta.env.VITE_API_URL}/main`, {
+        await request.get("/main", {
           withCredentials: true,
         });
 

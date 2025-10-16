@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Header from "../components/common/Header";
-import pdfResultStore from "../store/pdfResultStore";
+import usePdfResultStore from "../store/usePdfResultStore";
 import { useNavigate } from "react-router-dom";
 
 function HistoryPage() {
   const navigate = useNavigate();
   const [histories, setHistories] = useState([]);
-  const { setPdfData } = pdfResultStore();
+  const { setPdfData } = usePdfResultStore();
   useEffect(() => {
     const getHistory = async () => {
       try {

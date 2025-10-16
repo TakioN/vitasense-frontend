@@ -1,8 +1,8 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
 import { useState } from "react";
-import useAuthStore from "../store/authStore";
+import useAuthStore from "../store/useAuthStore";
 import SignInHeader from "../components/common/SignInHeader";
+import request from "../apis/api";
 
 function SignIn() {
   const navigate = useNavigate();
@@ -12,10 +12,6 @@ function SignIn() {
 
   const [userId, setUserId] = useState("");
   const [pwd, setPwd] = useState("");
-
-  const goToSignUp = () => {
-    navigate("/sign-up");
-  };
 
   const goToOnBoarding = () => {
     navigate("/");
@@ -27,13 +23,10 @@ function SignIn() {
       return;
     }
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/func/login_process`,
-        { username: userId, pwd },
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await request.post("/func/login_process", {
+        username: userId,
+        pwd,
+      });
       console.log(res);
       login(res.data.userName);
       const from = location.state?.from?.pathname || "/";

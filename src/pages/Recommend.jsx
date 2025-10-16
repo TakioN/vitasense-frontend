@@ -1,4 +1,4 @@
-import recommendStore from "../store/RecommendStore";
+import useRecommendStore from "../store/useRecommendStore";
 import Header from "../components/common/Header";
 
 const RECOMMEND = [
@@ -15,7 +15,7 @@ const RECOMMEND = [
 ];
 
 function Recommend() {
-  const { recData } = recommendStore();
+  const { recData } = useRecommendStore();
 
   // const [recDataState, setRecDataState] = useState(recData);
 

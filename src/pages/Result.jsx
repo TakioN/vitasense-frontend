@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import Header from "../components/common/Header";
 import Divider from "../components/common/Divider";
 import Button from "../components/common/Button";
-import recommendStore from "../store/RecommendStore";
-import pdfResultStore from "../store/pdfResultStore";
+import useRecommendStore from "../store/useRecommendStore";
+import usePdfResultStore from "../store/usePdfResultStore";
 
 function Result() {
   const navigate = useNavigate();
@@ -18,8 +18,8 @@ function Result() {
   const [modified, setModified] = useState(false); // 데이터 수정 여부
   const [modifiedResult, setModifiedResult] = useState({});
 
-  const { setRecData } = recommendStore();
-  const { pdfData, setPdfData } = pdfResultStore();
+  const { setRecData } = useRecommendStore();
+  const { pdfData, setPdfData } = usePdfResultStore();
 
   useEffect(() => {
     setModifiedResult(pdfData);

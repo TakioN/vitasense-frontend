@@ -1,5 +1,5 @@
 import axios from "axios";
-import useAuthStore from "../../store/authStore";
+import useAuthStore from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 
 import logo from "@/assets/images/logo.png";

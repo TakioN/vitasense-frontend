@@ -5,13 +5,13 @@ import axios from "axios";
 import Header from "../components/common/Header";
 import pdfImg from "@/assets/images/pdf.svg";
 import Button from "../components/common/Button";
-import pdfResultStore from "../store/pdfResultStore";
-import useAuthStore from "../store/authStore";
+import usePdfResultStore from "../store/usePdfResultStore";
+import useAuthStore from "../store/useAuthStore";
 
 function Home() {
   const fileInputRef = useRef();
   const navigate = useNavigate();
-  const { setPdfData } = pdfResultStore();
+  const { setPdfData } = usePdfResultStore();
   const { userName } = useAuthStore();
 
   const [pdfFile, setPdfFile] = useState(null);
