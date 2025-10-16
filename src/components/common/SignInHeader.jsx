@@ -1,9 +1,13 @@
 import arrow from "../../assets/images/arrow.svg";
 
-function SignInHeader({ title }) {
+function SignInHeader({ title, backFn }) {
   return (
     <header className="border-b border-gray-500 flex items-center justify-center py-3 relative">
-      <img src={arrow} className="absolute left-5 size-6" />
+      <img
+        src={arrow}
+        className="cursor-pointer absolute left-5 size-6"
+        onClick={backFn}
+      />
       <span className="font-bold text-lg">{title}</span>
     </header>
   );

@@ -7,6 +7,11 @@ function OnBoarding() {
   const goToSignIn = () => {
     navigate("/sign-in");
   };
+
+  const goToSignUp = () => {
+    navigate("/sign-up");
+  };
+
   return (
     <div className="bg-gradient-to-b from-orange-300 via-orange-200 to-pink-300 h-[60dvh] w-full">
       <div className="flex justify-center flex-col items-center pt-20">
@@ -15,9 +20,12 @@ function OnBoarding() {
         <p className="font-bold text-2xl mt-1">영양제 조합을 확인해보세요</p>
       </div>
 
-      <div className="h-[50dvh] bg-white fixed bottom-0 w-full rounded-t-3xl">
+      <div className="h-[50dvh] bg-white fixed bottom-0 rounded-t-3xl w-full max-w-[1280px]">
         <div className="flex flex-col h-full items-center justify-center gap-7">
-          <button className="bg-[#E2B254] w-4/5 max-w-[540px] py-2 rounded-3xl font-bold cursor-pointer">
+          <button
+            className="bg-[#E2B254] w-4/5 max-w-[540px] py-2 rounded-3xl font-bold cursor-pointer"
+            onClick={goToSignUp}
+          >
             회원가입
           </button>
           <button
