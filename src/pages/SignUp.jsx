@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import SignInHeader from "@/components/common/SignInHeader";
@@ -14,20 +13,15 @@ function SignUp() {
   const navigate = useNavigate();
 
   const handleSignUp = async () => {
-    // id, 비밀번호 빈 값 체크
-    if (!userId) return;
-    if (!pwd) return;
+    // id, 비밀번호 빈 값, id 중복 체크
+    if (!userId || !pwd || pwd !== pwdCheck || !isCheckedId) return;
 
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/func/signup_process`,
-        {
-          username: userId,
-          pwd,
-        }
-      );
+      await request.post("/func/signup_process", {
+        username: userId,
+        pwd,
+      });
       navigate("/sign-in");
-      console.log(res);
     } catch (e) {
       console.error(e);
     }
@@ -135,8 +129,9 @@ function SignUp() {
               ? "bg-[orange]"
               : "bg-[gray]"
           }`}
+          onclick={handleSignUp}
         >
-          로그인
+          회원가입
         </button>
       </main>
     </div>
