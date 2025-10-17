@@ -5,7 +5,7 @@ import request from "../apis/api";
 const useAuthStore = create(
   persist((set) => ({
     isLoggedIn: false,
-    isLoading: true,
+    isLoading: false,
     userName: "",
 
     init: async () => {

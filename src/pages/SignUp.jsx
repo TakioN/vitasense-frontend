@@ -17,7 +17,7 @@ function SignUp() {
     if (!userId || !pwd || pwd !== pwdCheck || !isCheckedId) return;
 
     try {
-      await request.post("/func/signup_process", {
+      await request.post("/auth/signup_process", {
         username: userId,
         pwd,
       });
@@ -34,7 +34,7 @@ function SignUp() {
   const idCheck = () => {
     if (!userId) return;
     request
-      .post("/func/check-id", {
+      .post("/auth/check-id", {
         userName: userId,
       })
       .then(() => {

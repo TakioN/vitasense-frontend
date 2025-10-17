@@ -1,10 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import { useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
 import UserSetting from "./pages/UserSetting";
@@ -14,29 +8,14 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import HistoryPage from "./pages/HistoryPage";
 import ProtectedRoute from "./components/Protected/ProtectedRoute";
-import useAuthStore from "./store/useAuthStore";
 
 import "./App.css";
 import OnBoarding from "./pages/OnBoarding";
 
 function App() {
-  const { init } = useAuthStore();
-
-  useEffect(() => {
-    init();
-  }, []);
-
   return (
     <Router>
       <Routes>
-        {/* <Route path="/" element={<ProtectedRoute element={<Home />} />} />
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
-
-        <Route path="/history" element={<HistoryPage />} />
-        <Route path="/user-setting" element={<UserSetting />} />
-        <Route path="/result" element={<Result />} />
-        <Route path="/recommend" element={<Recommend />} /> */}
         <Route path="/" element={<OnBoarding />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />

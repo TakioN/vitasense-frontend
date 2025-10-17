@@ -23,13 +23,13 @@ function SignIn() {
       return;
     }
     try {
-      const res = await request.post("/func/login_process", {
+      const res = await request.post("/auth/login_process", {
         username: userId,
         pwd,
       });
       console.log(res);
       login(res.data.userName);
-      const from = location.state?.from?.pathname || "/";
+      const from = location.state?.from?.pathname || "/home";
       console.log(from);
       navigate(from, { replace: true });
     } catch (e) {
@@ -76,7 +76,7 @@ function SignIn() {
 
         <button
           className={`fixed bottom-5 left-0 right-0 mx-[10%] h-12 rounded-md font-bold text-lg ${
-            userId && pwd ? "bg-[orange]" : "bg-[gray]"
+            userId && pwd ? "bg-[orange] cursor-pointer" : "bg-[gray]"
           }`}
           onClick={signInHandler}
         >

@@ -93,8 +93,8 @@ function Home() {
             )}
           </div>
         </div>
-        <Button>마이페이지</Button>
-        <Button onClick={goToHistory}>이전 기록 조회</Button>
+        {/* <Button>마이페이지</Button>
+        <Button onClick={goToHistory}>이전 기록 조회</Button> */}
       </main>
     </>
   );
