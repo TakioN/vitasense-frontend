@@ -40,3 +40,11 @@
 .read-the-docs {
   color: #888;
 }
+
+@theme {
+  --breakpoint-xs: 380px;
+}
+
+:root {
+  --main-1: #e2b254;
+}

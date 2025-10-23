@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import request from "../apis/api";
 
 function useAuth() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -7,10 +7,8 @@ function useAuth() {
 
   useEffect(() => {
     const loginStatus = () => {
-      axios
-        .get(`${import.meta.env.VITE_API_URL}/main`, {
-          withCredentials: true,
-        })
+      request
+        .get("/main")
         .then((res) => {
           setIsLoggedIn(true);
           console.log(res);
