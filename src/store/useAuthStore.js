@@ -30,7 +30,7 @@ const useAuthStore = create(
     },
 
     logout: () => {
-      set({ isLoggedIn: false });
+      set({ isLoggedIn: false, userName: "" });
     },
   }))
 );
