@@ -2,7 +2,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import Header from "../components/common/Header";
-import Divider from "../components/common/Divider";
 import Button from "../components/common/Button";
 import useRecommendStore from "../store/useRecommendStore";
 import usePdfResultStore from "../store/usePdfResultStore";
@@ -53,27 +52,31 @@ function Result() {
           "border-b border-gray-300"
         }`}
       >
-        <p
+        <div
           key={idx}
           className="flex justify-between py-1 mb-1 mx-auto items-center"
         >
-          {/* <span className="text-xl">{key}</span> */}
           <div className="flex flex-col text-start">
             <span className="font-semibold">{key}</span>
             <span className="text-xs text-gray-500">{NORMAL_RANGE[key]}</span>
           </div>
           {isModifying ? (
-            <input
-              type="text"
-              className="w-15 border border-black"
-              value={modifiedResult[key]}
-              onChange={(e) => {
-                setModifiedResult((prev) => ({
-                  ...prev,
-                  [key]: e.target.value,
-                }));
-              }}
-            />
+            <div className="flex gap-2">
+              <input
+                type="text"
+                className="w-15 border border-black rounded-md text-center"
+                value={modifiedResult[key]}
+                onChange={(e) => {
+                  setModifiedResult((prev) => ({
+                    ...prev,
+                    [key]: e.target.value,
+                  }));
+                }}
+              />
+              <span className="font-normal text-xs text-black">
+                {DETAIL_UNITS[key]}
+              </span>
+            </div>
           ) : (
             <span
               className={`text-xl font-bold ${
@@ -86,7 +89,7 @@ function Result() {
               </span>
             </span>
           )}
-        </p>
+        </div>
       </div>
     ));
 
@@ -106,7 +109,7 @@ function Result() {
 
   const uploadResultToDb = async () => {
     if (fromHistory && !modified) return;
-    const db_res = await request.post("/user/submitAll", {
+    const db_res = await request.post("/record/upload", {
       result: pdfData,
       judge: judges,
     });
@@ -119,7 +122,7 @@ function Result() {
     await uploadResultToDb();
 
     request
-      .post("/user/recommend", {
+      .post("/recommend", {
         judges: { ...judges },
       })
       .then((res) => {
@@ -217,32 +220,40 @@ function Result() {
           </div>
         </div>
 
-        <div className="bg-white mt-8 border-2 border-gray-300 rounded-xl p-4">
+        <div className="bg-white mt-8 border-2 border-gray-300 rounded-xl p-4 mb-10">
           <p className="font-bold text-start">상세 수치</p>
           <p className="mb-5 text-start text-gray-500 text-sm">
             각 항복별 측정값과 정상 범위
           </p>
-          <div className="">{renderPdfResult()}</div>
+          <div>{renderPdfResult()}</div>
         </div>
 
         {isModifying ? (
-          <Button
-            onClick={async () => {
-              await modifyComplete();
-            }}
-          >
-            수정완료
-          </Button>
+          <div>
+            <Button
+              onClick={async () => {
+                await modifyComplete();
+              }}
+              className="bg-[var(--main-1)]"
+            >
+              수정완료
+            </Button>
+          </div>
         ) : (
-          <Button
-            onClick={() => {
-              setIsModifying(true);
-            }}
-          >
-            수정하기
-          </Button>
+          <div className="flex gap-3 justify-center">
+            <Button
+              onClick={() => {
+                setIsModifying(true);
+              }}
+              className="bg-[var(--main-1)]"
+            >
+              수정하기
+            </Button>
+            <Button onClick={sendData} className="bg-[var(--main-1)]">
+              영양제 추천
+            </Button>
+          </div>
         )}
-        {!isModifying && <Button onClick={sendData}>영양제 추천</Button>}
       </main>
     </>
   );
