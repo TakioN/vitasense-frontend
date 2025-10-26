@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-const pdfResultStore = create((set) => ({
+const usePdfResultStore = create((set) => ({
   pdfData: {
     체질량지수: "10",
     고혈압_수축기: "100",
@@ -21,10 +21,10 @@ const pdfResultStore = create((set) => ({
     신장질환: "정상",
     간장질환: "정상",
   },
-  setpdfData: (newData) =>
+  setPdfData: (newData) =>
     set((state) => ({ pdfData: { ...state.pdfData, ...newData } })),
   setJudgeResult: (newData) =>
     set((state) => ({ judgeResult: { ...state.judgeResult, ...newData } })),
 }));
 
-export default pdfResultStore;
+export default usePdfResultStore;

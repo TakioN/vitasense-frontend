@@ -1,7 +1,5 @@
-import recommendStore from "../store/RecommendStore";
-import Header from "../components/common/header";
-
-import omega3 from "@/assets/images/omega3.png";
+import useRecommendStore from "../store/useRecommendStore";
+import Header from "../components/common/Header";
 
 const RECOMMEND = [
   {
@@ -17,24 +15,22 @@ const RECOMMEND = [
 ];
 
 function Recommend() {
-  const { recData } = recommendStore();
-  console.log(recData);
+  const { recData } = useRecommendStore();
 
   // const [recDataState, setRecDataState] = useState(recData);
 
   const renderRecommend = () =>
-    // recData.map((re, idx) => (
-    RECOMMEND.map((re, idx) => (
+    recData.map((re, idx) => (
+      // RECOMMEND.map((re, idx) => (
       <div key={idx} className="bg-[#eeeeee] rounded-md px-3 py-5 mb-10">
-        <p className="font-bold text-xl text-start mb-5">{re.itemName}</p>
-        <p className="text-start mb-5">{re.content}</p>
-        {/* {re.atpnWarnings.map((at) => (
-          <p>{at}</p>
-        ))}
-        {re.intrcWarnings.map((at) => (
-          <p>{at}</p>
-        ))} */}
-        <img src={omega3} alt="omega3" className="inline-block text-center" />
+        <p className="font-bold text-xl text-start mb-5">{re.item_name}</p>
+        <p className="text-start mb-5">효능 : {re.efficacy}</p>
+        <p className="text-start mb-5">복용법 : {re.how_to_use}</p>
+        <p className="text-start mb-5">주의사항 : {re.warning}</p>
+        <p className="text-start mb-5">부작용 : {re.side_effect}</p>
+        {re.image_url && (
+          <img src={re.image_url} className="inline-block text-center" />
+        )}
       </div>
     ));
   return (

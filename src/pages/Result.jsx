@@ -1,128 +1,259 @@
-import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import Header from "../components/common/header";
-import Divider from "../components/common/Divider";
+import Header from "../components/common/Header";
 import Button from "../components/common/Button";
-import recommendStore from "../store/RecommendStore";
-import pdfResultStore from "../store/pdfResultStore";
+import useRecommendStore from "../store/useRecommendStore";
+import usePdfResultStore from "../store/usePdfResultStore";
+import request from "../apis/api";
+import { DETAIL_UNITS, NORMAL_RANGE } from "../../constants/unit";
+
+import exclamation from "@/assets/images/exclamation.svg";
+import check from "@/assets/images/check.svg";
 
 function Result() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { submit } = location.state || {};
-  const [judges, setJudges] = useState({});
+  const { fromHistory } = location.state || {};
 
-  const { setRecData } = recommendStore();
-  const { pdfData } = pdfResultStore();
-  // const TEMPPDF = {
-  //   체질량지수: "90",
-  //   고혈압_수축기: "200",
-  //   고혈압_이완기: "120",
-  //   혈색소: "13",
-  //   공복혈당: "100",
-  //   "혈청 크레아티닌": "1.5",
-  //   신사구체여과율: "60",
-  //   "에이에스티(AST)": "40",
-  //   "에이엘티(ALT)": "35",
-  //   "감마지티피(γ-GTP)": "63",
-  // };
+  const [judges, setJudges] = useState({});
+  const [isModifying, setIsModifying] = useState(false); // 수정 중 체크
+  const [modified, setModified] = useState(false); // 데이터 수정 여부
+  const [modifiedResult, setModifiedResult] = useState({});
+
+  const { setRecData } = useRecommendStore();
+  const { pdfData, setPdfData } = usePdfResultStore();
 
   useEffect(() => {
-    const getJudges = async () => {
-      try {
-        const res = await axios.post(
-          `${import.meta.env.VITE_API_URL}/user/judge`,
-          pdfData
-        );
-        console.log(res);
-        setJudges(res.data);
-        if (!submit) {
-          const db_res = await axios.post(
-            `${import.meta.env.VITE_API_URL}/user/submitAll`,
-            {
-              result: pdfData,
-              judge: res.data,
-            },
-            {
-              withCredentials: true,
-            }
-          );
-          console.log(db_res);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    };
-
+    setModifiedResult(pdfData);
     getJudges();
   }, []);
+
+  const getJudges = async (modified) => {
+    const body = modified ? modifiedResult : pdfData;
+    try {
+      // Fetch a judge results
+      const res = await request.post("/report/evaluate", body);
+      console.log(res.data);
+      setJudges(res.data);
+
+      // uploadResultToDb(res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const renderPdfResult = () =>
     Object.entries(pdfData).map(([key, value], idx) => (
       <div
         key={idx}
-        className={`${idx % 2 == 0 ? "bg-[#a52a2a8c]" : "bg-[orange]"}`}
+        className={`${
+          idx !== Object.entries(pdfData).length - 1 &&
+          "border-b border-gray-300"
+        }`}
       >
-        <p key={idx} className="flex justify-between py-1 mb-1 w-3/5 mx-auto">
-          <span className="text-xl">{key}</span>
-          <span className="text-xl">{value}</span>
-        </p>
+        <div
+          key={idx}
+          className="flex justify-between py-1 mb-1 mx-auto items-center"
+        >
+          <div className="flex flex-col text-start">
+            <span className="font-semibold">{key}</span>
+            <span className="text-xs text-gray-500">{NORMAL_RANGE[key]}</span>
+          </div>
+          {isModifying ? (
+            <div className="flex gap-2">
+              <input
+                type="text"
+                className="w-15 border border-black rounded-md text-center"
+                value={modifiedResult[key]}
+                onChange={(e) => {
+                  setModifiedResult((prev) => ({
+                    ...prev,
+                    [key]: e.target.value,
+                  }));
+                }}
+              />
+              <span className="font-normal text-xs text-black">
+                {DETAIL_UNITS[key]}
+              </span>
+            </div>
+          ) : (
+            <span
+              className={`text-xl font-bold ${
+                !checkIsInRange(key, Number(value)) && "text-[orange]"
+              }`}
+            >
+              {value}{" "}
+              <span className="font-normal text-xs text-black">
+                {DETAIL_UNITS[key]}
+              </span>
+            </span>
+          )}
+        </div>
       </div>
     ));
 
-  const sendData = () => {
-    // axios
-    //   .post(`${import.meta.env.VITE_API_URL}/user/recommend`, {})
-    //   .then((res) => {
-    //     console.log(res);
-    //     setRecData(res.data.data);
-    //     navigate("/recommend");
-    //   })
-    //   .catch((e) => {
-    //     console.error(e);
-    //   });
-    navigate("/recommend");
+  // 각 수치들이 정상 범위에 있는지 판단
+  const checkIsInRange = (name, val) => {
+    if (name === "체질량지수") return val >= 18.5 && val <= 24.9;
+    else if (name === "고혈압_수축기") return val < 120;
+    else if (name === "고혈압_이완기") return val < 80;
+    else if (name === "혈색소") return val >= 13 && val <= 16.5;
+    else if (name === "공복혈당") return val < 100;
+    else if (name === "혈청 크레아티닌") return val < 1.1;
+    else if (name === "신사구체여과율") return val > 60;
+    else if (name === "에이에스티(AST)") return val < 38;
+    else if (name === "에이엘티(ALT)") return val < 44;
+    else if (name === "감마지티피(γ-GTP)") return val < 73;
+  };
+
+  const uploadResultToDb = async () => {
+    if (fromHistory && !modified) return;
+    const db_res = await request.post("/record/upload", {
+      result: pdfData,
+      judge: judges,
+    });
+    console.log(db_res);
+  };
+
+  const sendData = async () => {
+    if (!judges) return;
+
+    await uploadResultToDb();
+
+    request
+      .post("/recommend", {
+        judges: { ...judges },
+      })
+      .then((res) => {
+        console.log(res);
+        setRecData(res.data.list);
+        navigate("/recommend");
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+    // navigate("/recommend");
   };
 
   const renderJudge = () =>
     judges &&
-    Object.entries(judges).map(([jgIdx, jgValue], idx) => (
-      <li key={idx} className="text-start font-bold h-10">
-        {jgIdx} - {jgValue}
-      </li>
-    ));
+    Object.entries(judges).map(([jgIdx, jgValue], idx) => {
+      const [icon, badge] = getBadgeAndIcon(jgValue);
+      return (
+        <li
+          key={idx}
+          className="text-start border border-gray-300 flex rounded-md py-4 px-2 items-center relative"
+        >
+          <img src={icon} className="size-6 mr-2" />
+          <div className="flex flex-col">
+            <span className="font-bold">{jgIdx}</span>
+            <span className="text-gray-500 text-sm">
+              {getDetailValue(jgIdx) ?? jgValue}
+            </span>
+          </div>
+
+          {badge}
+        </li>
+      );
+    });
+
+  // 정상, 비정상 여부에 따라서 뱃지, 아이콘 부여
+  const getBadgeAndIcon = (val) => {
+    if (val === "정상") {
+      const badge = (
+        <span className="absolute right-2 text-xs bg-green-100 text-green-800 font-bold py-1 rounded-full px-2">
+          정상
+        </span>
+      );
+      return [check, badge];
+    } else {
+      const badge = (
+        <span className="absolute right-2 text-xs bg-amber-100 text-amber-800 font-bold py-1 px-2  rounded-full">
+          비정상
+        </span>
+      );
+      return [exclamation, badge];
+    }
+  };
+
+  // 각 부분의 수치 얻기
+  const getDetailValue = (name) => {
+    if (name === "체질량지수") return `${pdfData["체질량지수"]}kg/m²`;
+    else if (name === "고혈압")
+      return `수축기 ${pdfData["고혈압_수축기"]} / 이완기 ${pdfData["고혈압_이완기"]}`;
+    else if (name === "혈색소") return `${pdfData["혈색소"]}g/dL`;
+    else if (name === "공복혈당") return `${pdfData["공복혈당"]}mg/dL`;
+    return null;
+  };
+
+  const modifyComplete = async () => {
+    setPdfData(modifiedResult);
+    setIsModifying(false);
+    setModified(true);
+    await getJudges(modifiedResult);
+  };
 
   return (
     <>
       <Header />
-      {console.log(pdfData)}
-      <main className="px-3">
-        <div className="mt-3 border border-[#EB757B] p-3 rounded-md">
-          <p className="mb-5 text-2xl">검사 결과</p>
+      <main
+        className="px-3 bg-[#f6f9fb] pt-10"
+        style={{ minHeight: "calc(100dvh - 66px)" }}
+      >
+        <div className="flex flex-col gap-1 mb-8">
+          <p className="font-bold text-xl md:text-3xl">건강검진 결과</p>
+          <p className="text-gray-700 text-xs md:text-base">
+            2024년 10월 24일 검진
+          </p>
+        </div>
+
+        <div className="p-4 border-2 border-gray-300 p-3 rounded-xl bg-white">
+          <p className="font-bold text-start">종합 건강 상태</p>
+          <p className="mb-5 text-start text-gray-500 text-sm">
+            주요 건강 지표의 정상/비정상 여부
+          </p>
           <div>
-            <ul className="list-disc list-inside grid grid-cols-2">
+            <ul className="list-disc list-inside grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {renderJudge()}
-              {/* <li className="text-start font-bold h-10">체질량 지수 - 정상</li>
-              <li className="text-start text-lg font-bold h-10">
-                혈색소 - 비정상
-              </li>
-              <li className="text-start text-lg font-bold h-10">혈압 - 정상</li>
-              <li className="text-start font-bold h-10">공복혈당 - 비정상</li>
-              <li className="text-start text-lg font-bold h-10">혈압 - 정상</li>
-              <li className="text-start font-bold h-10">공복혈당 - 비정상</li> */}
             </ul>
           </div>
         </div>
 
-        <Divider />
-
-        <div>
-          <div className="max-w-3xl mx-auto mb-20">{renderPdfResult()}</div>
-          <Button>수정하기</Button>
+        <div className="bg-white mt-8 border-2 border-gray-300 rounded-xl p-4 mb-10">
+          <p className="font-bold text-start">상세 수치</p>
+          <p className="mb-5 text-start text-gray-500 text-sm">
+            각 항복별 측정값과 정상 범위
+          </p>
+          <div>{renderPdfResult()}</div>
         </div>
-        <Button onClick={sendData}>영양제 추천</Button>
+
+        {isModifying ? (
+          <div>
+            <Button
+              onClick={async () => {
+                await modifyComplete();
+              }}
+              className="bg-[var(--main-1)]"
+            >
+              수정완료
+            </Button>
+          </div>
+        ) : (
+          <div className="flex gap-3 justify-center">
+            <Button
+              onClick={() => {
+                setIsModifying(true);
+              }}
+              className="bg-[var(--main-1)]"
+            >
+              수정하기
+            </Button>
+            <Button onClick={sendData} className="bg-[var(--main-1)]">
+              영양제 추천
+            </Button>
+          </div>
+        )}
       </main>
     </>
   );

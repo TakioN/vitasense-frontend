@@ -1,35 +1,69 @@
-import axios from "axios";
-import useAuthStore from "../../store/authStore";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+
+import request from "../../apis/api";
+import useAuthStore from "../../store/useAuthStore";
 
 import logo from "@/assets/images/logo.png";
+import userProfile from "@/assets/images/user-profile.svg";
+import person from "@/assets/images/person.svg";
+import logoutImg from "@/assets/images/logout.svg";
 
 const Profile = () => {
-  const { logout } = useAuthStore();
+  const { userName, logout } = useAuthStore();
+
+  const [isVisibleDropDown, setIsVisibleDropDown] = useState(false);
+
   const logOut = async () => {
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/func/logout`);
+      await request.post("/auth/logout");
       logout();
     } catch (e) {
       console.log(e);
     }
   };
   return (
-    <div className="absolute top-1/2 -translate-y-1/2 right-2 flex gap-2">
-      <p className="flex items-center font-semibold text-lg">UserName</p>
-      <div
-        className="bg-[#a1a1a1] size-10 rounded-[50%]"
-        onClick={logOut}
-      ></div>
+    <div
+      className="absolute top-1/2 -translate-y-1/2 right-2 flex gap-2 items-center cursor-pointer"
+      onClick={() => setIsVisibleDropDown((prev) => !prev)}
+    >
+      <img className="size-10 rounded-[50%]" src={userProfile} />
+      <p className="flex items-center font-semibold text-lg">{userName}</p>
+      <span className="">▼</span>
+
+      {isVisibleDropDown && (
+        <div className="bg-white absolute right-0 top-1/1 border border-gray-400 rounded-md px-4 py-2">
+          <ul>
+            <li className="flex items-center mb-2 gap-2 font-semibold">
+              <img src={person} />
+              마이프로필
+            </li>
+            <li
+              className="flex items-center mb-2 gap-2 font-semibold text-[red]"
+              onClick={logOut}
+            >
+              <img src={logoutImg} />
+              로그아웃
+            </li>
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
 
 function Header({ className }) {
+  const navigate = useNavigate();
+
+  const gotoHome = () => {
+    navigate("/");
+  };
+
   return (
     <header
       className={`w-full p-2 relative border-b border-[#cecece] ${className}`}
     >
-      <img src={logo} alt="logo" className="h-[3rem]" />
+      <img src={logo} alt="logo" className="h-[3rem]" onClick={gotoHome} />
       <Profile className="bg-[#446133]" />
     </header>
   );
