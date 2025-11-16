@@ -10,6 +10,8 @@ import person from "@/assets/images/person.svg";
 import logoutImg from "@/assets/images/logout.svg";
 
 const Profile = () => {
+  const navigate = useNavigate();
+
   const { userName, logout } = useAuthStore();
 
   const [isVisibleDropDown, setIsVisibleDropDown] = useState(false);
@@ -18,6 +20,7 @@ const Profile = () => {
     try {
       await request.post("/auth/logout");
       logout();
+      navigate("/");
     } catch (e) {
       console.log(e);
     }
@@ -32,11 +35,14 @@ const Profile = () => {
       <span className="">▼</span>
 
       {isVisibleDropDown && (
-        <div className="bg-white absolute right-0 top-1/1 border border-gray-400 rounded-md px-4 py-2">
+        <div className="bg-white absolute right-0 top-1/1 border border-gray-400 rounded-md px-4 py-2 min-w-[145px]">
           <ul>
-            <li className="flex items-center mb-2 gap-2 font-semibold">
+            <li
+              className="flex items-center mb-2 gap-2 font-semibold"
+              onClick={() => navigate("/health-score")}
+            >
               <img src={person} />
-              마이프로필
+              건강점수
             </li>
             <li
               className="flex items-center mb-2 gap-2 font-semibold text-[red]"
@@ -56,14 +62,19 @@ function Header({ className }) {
   const navigate = useNavigate();
 
   const gotoHome = () => {
-    navigate("/");
+    navigate("/home");
   };
 
   return (
     <header
       className={`w-full p-2 relative border-b border-[#cecece] ${className}`}
     >
-      <img src={logo} alt="logo" className="h-[3rem]" onClick={gotoHome} />
+      <img
+        src={logo}
+        alt="logo"
+        className="h-[3rem] cursor-pointer"
+        onClick={gotoHome}
+      />
       <Profile className="bg-[#446133]" />
     </header>
   );

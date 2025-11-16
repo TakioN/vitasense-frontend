@@ -14,7 +14,7 @@ import check from "@/assets/images/check.svg";
 function Result() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { fromHistory } = location.state || {};
+  const { fromHistory, date } = location.state || {};
 
   const [judges, setJudges] = useState({});
   const [isModifying, setIsModifying] = useState(false); // 수정 중 체크
@@ -33,9 +33,8 @@ function Result() {
     const body = modified ? modifiedResult : pdfData;
     try {
       // Fetch a judge results
-      const res = await request.post("/report/evaluate", body);
-      console.log(res.data);
-      setJudges(res.data);
+      const res = await request.post("/pdf/judge", body);
+      setJudges(res.data.judgements);
 
       // uploadResultToDb(res.data);
     } catch (e) {
@@ -109,7 +108,7 @@ function Result() {
 
   const uploadResultToDb = async () => {
     if (fromHistory && !modified) return;
-    const db_res = await request.post("/record/upload", {
+    const db_res = await request.post("/results/submit", {
       result: pdfData,
       judge: judges,
     });
@@ -122,12 +121,12 @@ function Result() {
     await uploadResultToDb();
 
     request
-      .post("/recommend", {
-        judges: { ...judges },
+      .get("/supplements", {
+        params: { ...judges },
       })
       .then((res) => {
         console.log(res);
-        setRecData(res.data.list);
+        setRecData(res.data);
         navigate("/recommend");
       })
       .catch((e) => {
@@ -204,7 +203,7 @@ function Result() {
         <div className="flex flex-col gap-1 mb-8">
           <p className="font-bold text-xl md:text-3xl">건강검진 결과</p>
           <p className="text-gray-700 text-xs md:text-base">
-            2024년 10월 24일 검진
+            {fromHistory ? date : new Date().toLocaleDateString()} 검진
           </p>
         </div>
 

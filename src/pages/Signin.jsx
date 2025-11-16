@@ -23,10 +23,7 @@ function SignIn() {
       return;
     }
     try {
-      const res = await request.post("/auth/login_process", {
-        username: userId,
-        pwd,
-      });
+      const res = await request.get("/");
       console.log(res);
       login(res.data.userName);
       const from = location.state?.from?.pathname || "/home";
