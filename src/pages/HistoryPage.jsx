@@ -11,12 +11,8 @@ function HistoryPage() {
   useEffect(() => {
     const getHistory = async () => {
       try {
-        const res = request.get(
-          `${import.meta.env.VITE_API_URL}/results/history`,
-          {
-            withCredentials: true,
-          }
-        );
+        const res = await request.get(`/results/history`);
+        console.log(res);
         setHistories(res.data.history);
       } catch (e) {
         console.error(e);

@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import Header from "../components/common/Header";
 import ScoreForIndex from "../components/healthScore/ScoreForIndex";
 import useHealthScoreStore from "../store/useHealthScoreStore";
-import request from "../apis/api";
 
 import bmi from "@/assets/images/bmi.svg";
 import bloodPressure from "@/assets/images/blood_pressure.svg";
@@ -11,16 +10,7 @@ import bloodType from "@/assets/images/bloodtype.svg";
 import glucose from "@/assets/images/glucose.svg";
 import nephrology from "@/assets/images/nephrology.svg";
 import pulmonology from "@/assets/images/pulmonology.svg";
-import usePdfResultStore from "../store/usePdfResultStore";
 
-const SCOREPERINDEX = {
-  체질량지수: 85,
-  혈압: 65,
-  혈색소: 90,
-  공복혈당: 90,
-  신장질환: 88,
-  간장질환: 70,
-};
 const SCORENAME = [
   "체질량지수",
   "혈압",
@@ -55,28 +45,13 @@ function HealthScore() {
   const individualScores = useHealthScoreStore(
     (state) => state.individualScores
   );
-  const setScore = useHealthScoreStore((state) => state.setScore);
-  const setIndividualScore = useHealthScoreStore(
-    (state) => state.setIndividualScore
-  );
-  const pdfData = usePdfResultStore((state) => state.pdfData);
+  const fetchScore = useHealthScoreStore((state) => state.fetchScore);
 
   useEffect(() => {
-    if (healthScore < 0) getScore();
+    if (healthScore < 0) fetchScore();
   }, []);
 
-  const getScore = async () => {
-    try {
-      const res = await request.post("/pdf/score", pdfData);
-      setScore(res.data.total_score);
-      setIndividualScore(res.data.individual_scores);
-    } catch (e) {
-      console.error("건강 점수 조회 중 오류 발생: " + e);
-    }
-  };
-
   const renderScores = () =>
-    // Object.entries(SCOREPERINDEX).map(([name, val], idx)
     Object.entries(individualScores).map(([_, val], idx) => (
       <ScoreForIndex
         imageSrc={IMAGESRCS[idx]}

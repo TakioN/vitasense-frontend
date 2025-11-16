@@ -72,7 +72,7 @@ function UserSetting() {
           </div>
         </div>
 
-        <div className="border border-[#EB757B] rounded-md mb-10 bg-white border border-gray-300 p-4">
+        <div className="rounded-md mb-10 bg-white border border-gray-300 p-4">
           <div className="flex gap-2">
             <div className="bg-[rgba(0,137,148,0.1)] size-10 flex items-center justify-center rounded-xl">
               <img src={vital} className="" />

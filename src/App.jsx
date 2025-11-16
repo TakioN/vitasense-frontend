@@ -10,6 +10,7 @@ import HealthScore from "./pages/HealthScore";
 
 import "./App.css";
 import OnBoarding from "./pages/OnBoarding";
+import MyPage from "./pages/MyPage";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/home" element={<Home />} />
 
         <Route element={<ProtectedRoute />}>
+          <Route path="/my" element={<MyPage />} />
           <Route path="/history" element={<HistoryPage />} />
           <Route path="/user-setting" element={<UserSetting />} />
           <Route path="/result" element={<Result />} />

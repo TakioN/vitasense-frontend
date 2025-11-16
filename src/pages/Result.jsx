@@ -34,7 +34,6 @@ function Result() {
     try {
       // Fetch a judge results
       const res = await request.post("/pdf/judge", body);
-      console.log(res.data);
       setJudges(res.data.judgements);
 
       // uploadResultToDb(res.data);
