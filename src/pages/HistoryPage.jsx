@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Header from "../components/common/Header";
 import usePdfResultStore from "../store/usePdfResultStore";
 import { useNavigate } from "react-router-dom";
+import request from "../apis/api";
 
 function HistoryPage() {
   const navigate = useNavigate();
@@ -11,13 +11,12 @@ function HistoryPage() {
   useEffect(() => {
     const getHistory = async () => {
       try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/user/history`,
+        const res = request.get(
+          `${import.meta.env.VITE_API_URL}/results/history`,
           {
             withCredentials: true,
           }
         );
-        console.log(res.data.history);
         setHistories(res.data.history);
       } catch (e) {
         console.error(e);

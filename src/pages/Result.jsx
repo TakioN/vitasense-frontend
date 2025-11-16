@@ -33,9 +33,9 @@ function Result() {
     const body = modified ? modifiedResult : pdfData;
     try {
       // Fetch a judge results
-      const res = await request.post("/report/evaluate", body);
+      const res = await request.post("/pdf/judge", body);
       console.log(res.data);
-      setJudges(res.data);
+      setJudges(res.data.judgements);
 
       // uploadResultToDb(res.data);
     } catch (e) {
@@ -204,7 +204,7 @@ function Result() {
         <div className="flex flex-col gap-1 mb-8">
           <p className="font-bold text-xl md:text-3xl">건강검진 결과</p>
           <p className="text-gray-700 text-xs md:text-base">
-            2024년 10월 24일 검진
+            {new Date().toLocaleDateString()} 검진
           </p>
         </div>
 

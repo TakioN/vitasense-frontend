@@ -14,10 +14,10 @@ function PdfUploader() {
 
   const sendPdfFile = async () => {
     const formData = new FormData();
-    formData.append("pdfFile", pdfFile);
+    formData.append("file", pdfFile);
 
     try {
-      const res = await request.post("/report/analyze", formData, {
+      const res = await request.post("/pdf/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log(res.data);
