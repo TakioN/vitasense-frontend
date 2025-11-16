@@ -14,7 +14,7 @@ import check from "@/assets/images/check.svg";
 function Result() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { fromHistory } = location.state || {};
+  const { fromHistory, date } = location.state || {};
 
   const [judges, setJudges] = useState({});
   const [isModifying, setIsModifying] = useState(false); // 수정 중 체크
@@ -203,7 +203,7 @@ function Result() {
         <div className="flex flex-col gap-1 mb-8">
           <p className="font-bold text-xl md:text-3xl">건강검진 결과</p>
           <p className="text-gray-700 text-xs md:text-base">
-            {new Date().toLocaleDateString()} 검진
+            {fromHistory ? date : new Date().toLocaleDateString()} 검진
           </p>
         </div>
 

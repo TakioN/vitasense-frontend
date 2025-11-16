@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Header from "../components/common/Header";
 import useHealthScoreStore from "../store/useHealthScoreStore";
@@ -21,6 +22,7 @@ const getJudge = (value) => {
 };
 
 function MyPage() {
+  const navigate = useNavigate();
   const healthScore = useHealthScoreStore((state) => state.healthScore);
   const fetchScore = useHealthScoreStore((state) => state.fetchScore);
   const history = useHistoryStore((state) => state.history);
@@ -120,7 +122,10 @@ function MyPage() {
 
           <div className="flex flex-col space-y-3 mb-5">{renderHistory()}</div>
 
-          <button className="rounded-lg border border-emerald-200 w-full py-2 cursor-pointer">
+          <button
+            className="rounded-lg border border-emerald-200 w-full py-2 cursor-pointer"
+            onClick={() => navigate("/history")}
+          >
             전체 기록 보기
           </button>
         </div>
@@ -134,7 +139,10 @@ function MyPage() {
             <span className="font-bold">알람 설정</span>
           </div>
 
-          <button className="rounded-lg border border-amber-200 w-full py-2 cursor-pointer">
+          <button
+            className="rounded-lg border border-amber-200 w-full py-2 cursor-pointer"
+            onClick={() => navigate("/my/tracker")}
+          >
             알람 설정 가기
           </button>
         </div>

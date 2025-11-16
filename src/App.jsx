@@ -7,10 +7,11 @@ import Recommend from "./pages/Recommend";
 import HistoryPage from "./pages/HistoryPage";
 import ProtectedRoute from "./components/Protected/ProtectedRoute";
 import HealthScore from "./pages/HealthScore";
-
-import "./App.css";
 import OnBoarding from "./pages/OnBoarding";
 import MyPage from "./pages/MyPage";
+import Tracker from "./pages/Tracker";
+
+import "./App.css";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/my" element={<MyPage />} />
+          <Route path="/my/tracker" element={<Tracker />} />
           <Route path="/history" element={<HistoryPage />} />
           <Route path="/user-setting" element={<UserSetting />} />
           <Route path="/result" element={<Result />} />
