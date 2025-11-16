@@ -18,11 +18,11 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<OnBoarding />} />
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
+        {/* <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/sign-up" element={<SignUp />} /> */}
+        <Route path="/home" element={<Home />} />
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/home" element={<Home />} />
           <Route path="/history" element={<HistoryPage />} />
           <Route path="/user-setting" element={<UserSetting />} />
           <Route path="/result" element={<Result />} />

@@ -1,9 +1,28 @@
+import { useEffect } from "react";
+
 import Header from "../components/common/Header";
 import Button from "../components/common/Button";
+import useAuthStore from "../store/useAuthStore";
 
 import PdfUploader from "../components/home/PdfUploader";
+import request from "../apis/api";
 
 function Home() {
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const login = useAuthStore((state) => state.login);
+
+  useEffect(() => {
+    if (isLoggedIn) return;
+    else {
+      getUser();
+    }
+  }, [isLoggedIn]);
+
+  const getUser = async () => {
+    const res = await request.get("/auth/profile");
+    login(res.data.userName);
+  };
+
   return (
     <>
       <Header />
