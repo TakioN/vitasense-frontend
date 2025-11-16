@@ -8,6 +8,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import HistoryPage from "./pages/HistoryPage";
 import ProtectedRoute from "./components/Protected/ProtectedRoute";
+import HealthScore from "./pages/HealthScore";
 
 import "./App.css";
 import OnBoarding from "./pages/OnBoarding";
@@ -26,6 +27,7 @@ function App() {
           <Route path="/user-setting" element={<UserSetting />} />
           <Route path="/result" element={<Result />} />
           <Route path="/recommend" element={<Recommend />} />
+          <Route path="/health-score" element={<HealthScore />} />
         </Route>
       </Routes>
     </Router>

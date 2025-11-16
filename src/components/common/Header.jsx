@@ -56,14 +56,19 @@ function Header({ className }) {
   const navigate = useNavigate();
 
   const gotoHome = () => {
-    navigate("/");
+    navigate("/home");
   };
 
   return (
     <header
       className={`w-full p-2 relative border-b border-[#cecece] ${className}`}
     >
-      <img src={logo} alt="logo" className="h-[3rem]" onClick={gotoHome} />
+      <img
+        src={logo}
+        alt="logo"
+        className="h-[3rem] cursor-pointer"
+        onClick={gotoHome}
+      />
       <Profile className="bg-[#446133]" />
     </header>
   );
