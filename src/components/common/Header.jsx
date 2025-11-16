@@ -37,9 +37,12 @@ const Profile = () => {
       {isVisibleDropDown && (
         <div className="bg-white absolute right-0 top-1/1 border border-gray-400 rounded-md px-4 py-2 min-w-[145px]">
           <ul>
-            <li className="flex items-center mb-2 gap-2 font-semibold">
+            <li
+              className="flex items-center mb-2 gap-2 font-semibold"
+              onClick={() => navigate("/health-score")}
+            >
               <img src={person} />
-              마이프로필
+              건강점수
             </li>
             <li
               className="flex items-center mb-2 gap-2 font-semibold text-[red]"

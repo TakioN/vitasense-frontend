@@ -14,7 +14,9 @@ function ScoreForIndex({ imageSrc, name, value }) {
         </div>
 
         <span className="font-bold">{name}</span>
-        <span className="font-bold text-3xl absolute right-0">{value}</span>
+        <span className="font-bold text-3xl absolute right-0">
+          {Math.round(value)}
+        </span>
       </div>
 
       <div className="bg-gray-300 h-3 rounded-md w-full">

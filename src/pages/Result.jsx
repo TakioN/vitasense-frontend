@@ -109,7 +109,7 @@ function Result() {
 
   const uploadResultToDb = async () => {
     if (fromHistory && !modified) return;
-    const db_res = await request.post("/record/upload", {
+    const db_res = await request.post("/results/submit", {
       result: pdfData,
       judge: judges,
     });
@@ -122,12 +122,12 @@ function Result() {
     await uploadResultToDb();
 
     request
-      .post("/recommend", {
-        judges: { ...judges },
+      .get("/supplements", {
+        params: { ...judges },
       })
       .then((res) => {
         console.log(res);
-        setRecData(res.data.list);
+        setRecData(res.data);
         navigate("/recommend");
       })
       .catch((e) => {
