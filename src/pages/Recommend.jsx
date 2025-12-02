@@ -5,7 +5,7 @@ import pill from "@/assets/images/pill.svg";
 import warning from "@/assets/images/warning.svg";
 
 function Recommend() {
-  const { recData } = useRecommendStore();
+  const recData = useRecommendStore((state) => state.recData);
 
   const renderRecommend = () =>
     recData.map((re, idx) => (
@@ -18,11 +18,11 @@ function Recommend() {
             />
           )}
           <div className="text-start">
-            <p className="font-bold text-xl text-start mb-2">{re.item_name}</p>
+            <p className="font-bold text-xl text-start mb-2">{re.itemName}</p>
             <span className="font-bold">효능</span>
             <p className="text-start mb-5 mt-1">{re.efficacy}</p>
             <span className="font-bold">복용법</span>
-            <p className="text-start mt-1">{re.how_to_use}</p>
+            <p className="text-start mt-1">{re.howToUse}</p>
           </div>
         </div>
 
@@ -36,7 +36,7 @@ function Recommend() {
 
         <div className="border border-gray-200 bg-gray-50 rounded-md text-start p-4">
           <span className="font-bold">부작용</span>
-          <p>{re.side_effect}</p>
+          <p>{re.sideEffect || "없음"}</p>
         </div>
       </div>
     ));

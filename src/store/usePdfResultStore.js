@@ -11,7 +11,7 @@ const usePdfResultStore = create((set) => ({
     신사구체여과율: "60",
     "에이에스티(AST)": "40",
     "에이엘티(ALT)": "35",
-    "감마지티피(γ-GTP)": null,
+    "감마지티피(γ-GTP)": 25,
   },
   judgeResult: {
     체질량지수: "정상",
@@ -25,10 +25,10 @@ const usePdfResultStore = create((set) => ({
 
   setPdfData: (newData) =>
     set((state) => ({ pdfData: { ...state.pdfData, ...newData } })),
-  setJudgeResult: (newData) =>
-    set((state) => ({ judgeResult: { ...state.judgeResult, ...newData } })),
+  setJudgeResult: (newData) => set({ judgeResult: newData }),
   addAbnormal: (data) =>
     set((state) => ({ abNormalIndices: [...state.abNormalIndices, data] })),
+  setAbnormal: (data) => set({ abNormalIndices: data }),
 }));
 
 export default usePdfResultStore;
