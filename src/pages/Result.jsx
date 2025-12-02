@@ -16,13 +16,17 @@ function Result() {
   const location = useLocation();
   const { fromHistory, date } = location.state || {};
 
-  const [judges, setJudges] = useState({});
   const [isModifying, setIsModifying] = useState(false); // 수정 중 체크
   const [modified, setModified] = useState(false); // 데이터 수정 여부
   const [modifiedResult, setModifiedResult] = useState({});
 
-  const { setRecData } = useRecommendStore();
-  const { pdfData, setPdfData } = usePdfResultStore();
+  const setRecData = useRecommendStore((state) => state.setRecData);
+  const setAbnormal = usePdfResultStore((state) => state.setAbnormal);
+  const abNormalIndices = usePdfResultStore((state) => state.abNormalIndices);
+  const pdfData = usePdfResultStore((state) => state.pdfData);
+  const setPdfData = usePdfResultStore((state) => state.setPdfData);
+  const setJudgeResult = usePdfResultStore((state) => state.setJudgeResult);
+  const judgeResult = usePdfResultStore((state) => state.judgeResult);
 
   useEffect(() => {
     setModifiedResult(pdfData);
@@ -32,11 +36,25 @@ function Result() {
   const getJudges = async (modified) => {
     const body = modified ? modifiedResult : pdfData;
     try {
-      // Fetch a judge results
       const res = await request.post("/pdf/judge", body);
-      setJudges(res.data.judgements);
-
-      // uploadResultToDb(res.data);
+      setJudgeResult(res.data.judgements);
+      // keyword를 가지고 있는 것은 abnormal
+      setAbnormal(
+        Object.entries(res.data.keywords)
+          .filter(([_, val]) => Object.keys(val).length !== 0)
+          .map(([key]) => key)
+      );
+      console.log(res.data.keywords);
+      console.log(
+        Object.entries(res.data.keywords).filter(
+          ([_, val]) => Object.keys(val).length !== 0
+        )
+      );
+      console.log(
+        Object.entries(res.data.keywords)
+          .filter(([_, val]) => Object.keys(val).length !== 0)
+          .map(([key]) => key)
+      );
     } catch (e) {
       console.error(e);
     }
@@ -110,20 +128,24 @@ function Result() {
     if (fromHistory && !modified) return;
     const db_res = await request.post("/results/submit", {
       result: pdfData,
-      judge: judges,
+      judge: judgeResult,
     });
     console.log(db_res);
   };
 
   const sendData = async () => {
-    if (!judges) return;
+    if (!judgeResult) return;
 
     await uploadResultToDb();
 
+    const params = new URLSearchParams();
+    for (let ab of abNormalIndices) params.append("condition", ab);
+
+    console.log(abNormalIndices);
+    console.log(params.toString());
+
     request
-      .get("/supplements", {
-        params: { ...judges },
-      })
+      .get(`/supplements?${params.toString()}`)
       .then((res) => {
         console.log(res);
         setRecData(res.data);
@@ -136,8 +158,8 @@ function Result() {
   };
 
   const renderJudge = () =>
-    judges &&
-    Object.entries(judges).map(([jgIdx, jgValue], idx) => {
+    judgeResult &&
+    Object.entries(judgeResult).map(([jgIdx, jgValue], idx) => {
       const [icon, badge] = getBadgeAndIcon(jgValue);
       return (
         <li
@@ -159,7 +181,7 @@ function Result() {
 
   // 정상, 비정상 여부에 따라서 뱃지, 아이콘 부여
   const getBadgeAndIcon = (val) => {
-    if (val === "정상") {
+    if (val === "정상" || (Array.isArray(val) && val[0] === "정상")) {
       const badge = (
         <span className="absolute right-2 text-xs bg-green-100 text-green-800 font-bold py-1 rounded-full px-2">
           정상

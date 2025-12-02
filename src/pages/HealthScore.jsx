@@ -1,4 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import {
+  PolarAngleAxis,
+  PolarGrid,
+  RadarChart,
+  PolarRadiusAxis,
+  Radar,
+} from "recharts";
 
 import Header from "../components/common/Header";
 import ScoreForIndex from "../components/healthScore/ScoreForIndex";
@@ -47,13 +54,25 @@ function HealthScore() {
   );
   const fetchScore = useHealthScoreStore((state) => state.fetchScore);
 
+  const [radarData, setRadarData] = useState([]);
+
   useEffect(() => {
     if (healthScore < 0) fetchScore();
   }, []);
 
+  useEffect(() => {
+    setRadarData(
+      Object.values(individualScores).map((val, idx) => ({
+        name: SCORENAME[idx],
+        value: val,
+      }))
+    );
+  }, [individualScores]);
+
   const renderScores = () =>
     Object.entries(individualScores).map(([_, val], idx) => (
       <ScoreForIndex
+        key={idx}
         imageSrc={IMAGESRCS[idx]}
         name={SCORENAME[idx]}
         value={val}
@@ -71,6 +90,7 @@ function HealthScore() {
           </p>
         </div>
 
+        {/* 종합 건강 점수 */}
         <div className="border rounded-md mt-10 flex text-start p-4 bg-white flex-col justify-between md:flex-row gap-2">
           <div className="flex flex-col items-center">
             <span>종합 건강 점수</span>
@@ -101,14 +121,34 @@ function HealthScore() {
           </div>
         </div>
 
+        {/* 항목별 점수 */}
         <div className="border rounded-md mt-5 p-4">
           <div className="flex flex-col text-start mb-5">
             <span className="font-bold">항목별 점수</span>
             <span>각 건강 지표별 세부 점수</span>
           </div>
-
           <div className="grid md:grid-cols-2 gap-4">{renderScores()}</div>
         </div>
+
+        {/* Radar chart */}
+        <RadarChart
+          className="w-full h-[500px] no-recharts-outline overflow-auto"
+          outerRadius="80%"
+          data={radarData}
+          responsive
+          margin={{ left: 70 }}
+        >
+          <PolarGrid />
+          <PolarAngleAxis dataKey="name" />
+          <PolarRadiusAxis />
+          <Radar
+            name="score"
+            dataKey="value"
+            stroke="var(--main-1)"
+            fill="var(--main-1)"
+            fillOpacity={0.6}
+          />
+        </RadarChart>
       </main>
     </>
   );
