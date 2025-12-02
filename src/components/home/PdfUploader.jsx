@@ -21,10 +21,19 @@ function PdfUploader() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log(res.data);
-      setPdfData(res.data);
 
-      navigate("/user-setting");
+      if ("isComplete" in res.data) {
+        delete res.data.isComplete;
+        setPdfData(res.data);
+        navigate("/value-setting");
+      } else {
+        setPdfData(res.data);
+        navigate("/user-setting");
+      }
     } catch (e) {
+      if (e.response.data.code === 4002) {
+        navigate("/value-setting");
+      }
       console.log(e);
     }
   };

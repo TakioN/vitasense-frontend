@@ -10,7 +10,7 @@ import HealthScore from "./pages/HealthScore";
 import OnBoarding from "./pages/OnBoarding";
 import MyPage from "./pages/MyPage";
 import Tracker from "./pages/Tracker";
-
+import ValueSetting from "./pages/ValueSetting";
 import "./App.css";
 
 function App() {
@@ -25,6 +25,7 @@ function App() {
           <Route path="/my/tracker" element={<Tracker />} />
           <Route path="/history" element={<HistoryPage />} />
           <Route path="/user-setting" element={<UserSetting />} />
+          <Route path="/value-setting" element={<ValueSetting />} />
           <Route path="/result" element={<Result />} />
           <Route path="/recommend" element={<Recommend />} />
           <Route path="/health-score" element={<HealthScore />} />

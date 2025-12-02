@@ -21,8 +21,10 @@ function Result() {
   const [modified, setModified] = useState(false); // 데이터 수정 여부
   const [modifiedResult, setModifiedResult] = useState({});
 
-  const { setRecData } = useRecommendStore();
-  const { pdfData, setPdfData } = usePdfResultStore();
+  const setRecData = useRecommendStore((state) => state.setRecData);
+  const addAbnormal = usePdfResultStore((state) => state.addAbnormal);
+  const pdfData = usePdfResultStore((state) => state.pdfData);
+  const setPdfData = usePdfResultStore((state) => state.setPdfData);
 
   useEffect(() => {
     setModifiedResult(pdfData);
@@ -138,7 +140,7 @@ function Result() {
   const renderJudge = () =>
     judges &&
     Object.entries(judges).map(([jgIdx, jgValue], idx) => {
-      const [icon, badge] = getBadgeAndIcon(jgValue);
+      const [icon, badge] = getBadgeAndIcon(jgIdx, jgValue);
       return (
         <li
           key={idx}
@@ -158,8 +160,8 @@ function Result() {
     });
 
   // 정상, 비정상 여부에 따라서 뱃지, 아이콘 부여
-  const getBadgeAndIcon = (val) => {
-    if (val === "정상") {
+  const getBadgeAndIcon = (name, val) => {
+    if (val === "정상" || (Array.isArray(val) && val[0] === "정상")) {
       const badge = (
         <span className="absolute right-2 text-xs bg-green-100 text-green-800 font-bold py-1 rounded-full px-2">
           정상
@@ -167,6 +169,7 @@ function Result() {
       );
       return [check, badge];
     } else {
+      addAbnormal(name);
       const badge = (
         <span className="absolute right-2 text-xs bg-amber-100 text-amber-800 font-bold py-1 px-2  rounded-full">
           비정상
