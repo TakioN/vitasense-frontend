@@ -39,10 +39,10 @@ const Profile = () => {
           <ul>
             <li
               className="flex items-center mb-2 gap-2 font-semibold"
-              onClick={() => navigate("/health-score")}
+              onClick={() => navigate("/my")}
             >
               <img src={person} />
-              건강점수
+              마이페이지
             </li>
             <li
               className="flex items-center mb-2 gap-2 font-semibold text-[red]"

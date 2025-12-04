@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Header from "../components/common/Header";
@@ -7,6 +7,7 @@ import useHealthScoreStore from "../store/useHealthScoreStore";
 import heart from "@/assets/images/heart.svg";
 import historyImg from "@/assets/images/history.svg";
 import useHistoryStore from "../store/useHistoryStore";
+import { getMostRecentHistory, getScore } from "../apis/mypageApis";
 
 const barColor = (value) => {
   if (value >= 90) return "green";
@@ -28,9 +29,23 @@ function MyPage() {
   const history = useHistoryStore((state) => state.history);
   const fetchHistory = useHistoryStore((state) => state.fetchHistory);
 
+  const [score, setScore] = useState();
+
   useEffect(() => {
     if (healthScore < 0) fetchScore();
     if (history === null) fetchHistory();
+  }, []);
+
+  // 가장 최근의 건강 정보 가져오기
+  useEffect(() => {
+    const fetchRecentScore = async () => {
+      const data = await getMostRecentHistory();
+      const score = await getScore(data.result_json);
+      console.log(score);
+      setScore(score.total_score);
+    };
+
+    fetchRecentScore();
   }, []);
 
   const renderHistory = () =>
@@ -82,9 +97,9 @@ function MyPage() {
             <span>
               <span
                 className="font-bold text-[50px]"
-                style={{ color: barColor(healthScore) }}
+                style={{ color: barColor(score) }}
               >
-                {healthScore}
+                {score}
               </span>{" "}
               / 100
             </span>
@@ -103,8 +118,8 @@ function MyPage() {
               <div
                 className="h-full rounded-md"
                 style={{
-                  backgroundColor: barColor(healthScore),
-                  width: `${healthScore}%`,
+                  backgroundColor: barColor(score),
+                  width: `${score}%`,
                 }}
               />
             </div>

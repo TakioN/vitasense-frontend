@@ -1,13 +1,64 @@
 import { useEffect, useState } from "react";
+
 import Header from "../components/common/Header";
+import request from "../apis/api";
+import useIntakeStore from "../store/useIntakeStore";
 
 function Tracker() {
   const [complete, setComplete] = useState(0);
   const [isTaken, setIstaken] = useState(true);
+  const [alarms, setAlarms] = useState([]);
+
+  const isIntakeMap = useIntakeStore((state) => state.isIntakeMap);
+  const initIntakeMap = useIntakeStore((state) => state.initIntakeMap);
+  const updateIsIntake = useIntakeStore((state) => state.updateIsIntake);
 
   useEffect(() => {
-    setComplete(2);
+    const fetchAlarms = async () => {
+      const data = await request.get("/alarms/today");
+      console.log(data);
+      setAlarms(data.data);
+      initIntakeMap(data.data);
+    };
+
+    fetchAlarms();
+    // setComplete(2);
   }, []);
+
+  const renderAlarms = () =>
+    alarms.map((alarm) => (
+      <div
+        className="border px-3 py-4 rounded-lg mt-5 bg-white"
+        key={alarm.alarm_id}
+      >
+        <div className="flex flex-col gap-1 text-start">
+          <span className="font-bold text-2xl">{alarm.item_name}</span>
+          <span>{alarm.meal_type}</span>
+        </div>
+
+        <div className="p-2 border rounded-lg mt-4 flex items-center gap-5 relative ">
+          {isIntakeMap.get(alarm.alarm_id) ? (
+            <div
+              className="text-[green] font-bold rounded-full border-3 border-[green] flex items-center justify-center size-8 text-lg"
+              onClick={() => updateIsIntake(alarm.alarm_id)}
+            >
+              V
+            </div>
+          ) : (
+            <div
+              className="rounded-full border-3 border-gray-700 size-8"
+              onClick={() => updateIsIntake(alarm.alarm_id)}
+            />
+          )}
+          <div>{alarm.alarm_time}</div>
+          {isIntakeMap.get(alarm.alarm_id) && (
+            <span className="bg-green-100 text-green-800 px-2 py-1 rounded-3xl absolute right-2">
+              완료
+            </span>
+          )}
+        </div>
+      </div>
+    ));
 
   return (
     <>
@@ -30,7 +81,13 @@ function Tracker() {
             <span className="font-bold">오늘의 복용 현황</span>
             <div className="flex items-center gap-2">
               <span className="text-[50px] font-bold">
-                {Math.round((complete * 100) / 7)}%
+                {alarms.length !== 0 &&
+                  Math.round(
+                    (Array.from(isIntakeMap.values()).filter((x) => x).length *
+                      100) /
+                      alarms.length
+                  )}
+                %
               </span>
               <span>완료</span>
             </div>
@@ -39,39 +96,18 @@ function Tracker() {
           <div className="bg-blue-200 w-full h-3 rounded-2xl mt-3">
             <div
               className="transition-all duration-500 ease-in-out h-full bg-blue-500 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-500"
-              style={{ width: `${(complete * 100) / 7}%` }}
+              style={{
+                width: `${Math.round(
+                  (Array.from(isIntakeMap.values()).filter((x) => x).length *
+                    100) /
+                    alarms.length
+                )}%`,
+              }}
             />
           </div>
         </div>
 
-        <div className="border px-3 py-4 rounded-lg mt-5 bg-white">
-          <div className="flex flex-col gap-1 text-start">
-            <span className="font-bold text-2xl">오메가-3</span>
-            <span>1일 1회</span>
-          </div>
-
-          <div className="p-2 border rounded-lg mt-4 flex items-center gap-5 relative ">
-            {isTaken ? (
-              <div
-                className="text-[green] font-bold rounded-full border-3 border-[green] flex items-center justify-center size-8 text-lg"
-                onClick={() => setIstaken(false)}
-              >
-                V
-              </div>
-            ) : (
-              <div
-                className="rounded-full border-3 border-gray-700 size-8"
-                onClick={() => setIstaken(true)}
-              />
-            )}
-            <div>09:00</div>
-            {isTaken && (
-              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-3xl absolute right-2">
-                완료
-              </span>
-            )}
-          </div>
-        </div>
+        <>{renderAlarms()}</>
       </main>
     </>
   );

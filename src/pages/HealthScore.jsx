@@ -57,7 +57,7 @@ function HealthScore() {
   const [radarData, setRadarData] = useState([]);
 
   useEffect(() => {
-    if (healthScore < 0) fetchScore();
+    fetchScore();
   }, []);
 
   useEffect(() => {

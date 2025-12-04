@@ -9,3 +9,8 @@ export const getHistories = async () => {
   const res = await request.get("/results/history");
   return res.data;
 };
+
+export const getMostRecentHistory = async () => {
+  const res = await request.get("/results/history/recent");
+  return res.data;
+};

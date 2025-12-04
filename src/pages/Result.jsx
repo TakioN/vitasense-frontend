@@ -215,6 +215,11 @@ function Result() {
     await getJudges(modifiedResult);
   };
 
+  const goToScore = () => {
+    setPdfData();
+    navigate("/health-score");
+  };
+
   return (
     <>
       <Header />
@@ -249,7 +254,7 @@ function Result() {
           <div>{renderPdfResult()}</div>
         </div>
 
-        {isModifying ? (
+        {/* {isModifying ? (
           <div>
             <Button
               onClick={async () => {
@@ -274,7 +279,16 @@ function Result() {
               영양제 추천
             </Button>
           </div>
-        )}
+        )} */}
+
+        <div className="flex gap-3 justify-center">
+          <Button onClick={goToScore} className="bg-[var(--main-1)]">
+            점수 확인
+          </Button>
+          <Button onClick={sendData} className="bg-[var(--main-1)]">
+            영양제 추천
+          </Button>
+        </div>
       </main>
     </>
   );
